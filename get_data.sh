@@ -28,3 +28,13 @@ if [ ! -f $TRIPLES ]
     perl get_triples.pl | sort -S 2G | gzip -c > $TRIPLES
     rm order.csv
 fi
+LIST_TRIPLE=list.txt
+if [ ! -f $LIST_TRIPLE ]
+  then
+    gzip -cd triple_sorted.gz | cut -c 1-17 | uniq -c > $LIST_TRIPLE
+fi
+TOP_10=top10.txt
+if [ ! -f $TOP_10 ]
+  then
+    perl get_int.pl > $TOP_10
+fi
