@@ -10,7 +10,7 @@ my $buffered_row;
 while (my $row = <$fh>) {
   chomp $row;
   if (my ($count, $int_1, $int_2, $int_3) = ($row =~ /([0-9]+) *([0-9]+), *([0-9]+),[ ]*([0-9]+)/)) {
-    if ($count > 6500) {
+    if ($count > 6200) {
       if ($matchint eq $int_1."x".$int_2) {
         if ($buffered_row ne q{})
           {

@@ -1,30 +1,14 @@
 use strict;
 use warnings;
-use DateTime;
+use Time::Piece;
 
 # Return the difference between two yyyymmddhhmmss dates in seconds
 sub datediff {
   my ($low_date, $high_date) = @_;
-  my $high_dt =  DateTime->new(
-      year       => substr($high_date, 0, 4),
-      month      => substr($high_date, 4, 2),
-      day        => substr($high_date, 6, 2),
-      hour       => substr($high_date, 8, 2),
-      minute     => substr($high_date, 10, 2),
-      second     => substr($high_date, 12, 2),
-      nanosecond => 0,
-  );
-  my $low_dt =  DateTime->new(
-      year       => substr($low_date, 0, 4),
-      month      => substr($low_date, 4, 2),
-      day        => substr($low_date, 6, 2),
-      hour       => substr($low_date, 8, 2),
-      minute     => substr($low_date, 10, 2),
-      second     => substr($low_date, 12, 2),
-      nanosecond => 0,
-  );
-  my $diff_duration = $high_dt->subtract_datetime_absolute($low_dt);
-  return $diff_duration->seconds;
+  my $high_t = Time::Piece->strptime($high_date, "%Y%m%d%H%M%S");
+  my $low_t = Time::Piece->strptime($low_date, "%Y%m%d%H%M%S");
+
+  return $high_t-$low_t;
 }
 
 my $input_filename = 'order.csv';
