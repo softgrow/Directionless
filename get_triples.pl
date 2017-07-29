@@ -1,8 +1,35 @@
 use strict;
 use warnings;
+use DateTime;
 
-open(my $fh, '<', 'order.csv')
-  or die "Could not open file 'sorto.csv' $!";
+# Return the difference between two yyyymmddhhmmss dates in seconds
+sub datediff {
+  my ($low_date, $high_date) = @_;
+  my $high_dt =  DateTime->new(
+      year       => substr($high_date, 0, 4),
+      month      => substr($high_date, 4, 2),
+      day        => substr($high_date, 6, 2),
+      hour       => substr($high_date, 8, 2),
+      minute     => substr($high_date, 10, 2),
+      second     => substr($high_date, 12, 2),
+      nanosecond => 0,
+  );
+  my $low_dt =  DateTime->new(
+      year       => substr($low_date, 0, 4),
+      month      => substr($low_date, 4, 2),
+      day        => substr($low_date, 6, 2),
+      hour       => substr($low_date, 8, 2),
+      minute     => substr($low_date, 10, 2),
+      second     => substr($low_date, 12, 2),
+      nanosecond => 0,
+  );
+  my $diff_duration = $high_dt->subtract_datetime_absolute($low_dt);
+  return $diff_duration->seconds;
+}
+
+my $input_filename = 'order.csv';
+open(my $fh, '<', $input_filename)
+  or die "Could not open file '$input_filename' $!";
 # Want to get three triplets with 
 # the same ID
 # Diferent Intersection
@@ -34,7 +61,7 @@ while (my $row = <$fh>) {
     }
     else
     {
-      # Intersection repeated throw away last result
+      # Intersection repeated it is a new journey, flush the buffer
       $inter1 = $inter;
       $date1 = $date;
     }
@@ -44,7 +71,7 @@ while (my $row = <$fh>) {
       # Got a triple
       # Print out result
       print sprintf("%5d", $inter1).','.sprintf("%5d", $inter2).','.sprintf("%5d", $inter);
-      print ','.$date1.','.$date2.','.$date.','.$id."\n";
+      print ','.$date1.','.datediff($date1, $date2).','.$id."\n";
       # Shuffle up buffer
       $date1 = $date2;
       $inter1 = $inter2;
@@ -52,9 +79,10 @@ while (my $row = <$fh>) {
       $inter2 = $inter;
     }
     else {
-      # Intersection repeated throw away last result
-      $inter2 = $inter;
-      $date2 = $date;
+      # Intersection repeated it is a new journey, flush the buffer 
+      $inter1 = $inter;
+      $date1 = $date;
+      $buffer_state = 1;
    }
   }
 } 
