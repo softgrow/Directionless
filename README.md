@@ -13,7 +13,8 @@ The average time for each stream of traffic is shown, along with the number of v
 * As a whole
 * Busiest destination
 * Second busiest destination
-* ..
+
+Other files:
 
 * get_data.sh - script to automate downloading and processing data
 * *.pl - Perl programs to manipulate data
