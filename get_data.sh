@@ -15,10 +15,11 @@ if [ ! -f $SORTED_DATA ]
       | sort -S 1G -t, -k 3 -k 1 | gzip -c > $SORTED_DATA
 fi
 # Get the site data
-SITE_DATA=bluetoothsites.zip
+SITE_DATA=BTSites.csv
 if [ ! -f $SITE_DATA ]
   then
     curl -o $SITE_DATA https://data.sa.gov.au/data/dataset/54b072b7-ce24-48f5-9b57-e5e9bf380c00/resource/428f2fed-f206-4ade-8043-9597643ea2c8/download/bluetoothsites.zip
+    unzip bluetoothsites
 fi
 # Get the triples
 TRIPLES=triple_sorted.gz
@@ -37,4 +38,9 @@ TOP_10=top10.txt
 if [ ! -f $TOP_10 ]
   then
     perl get_int.pl > $TOP_10
+fi
+SAMP_ONE=2017060917
+if [ ! -f ${SAMP_ONE}.csv ]
+  then
+    perl get_stats.pl $SAMP_ONE 100 > ${SAMP_ONE}.csv
 fi
